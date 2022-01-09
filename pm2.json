@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+      "name":"NFT",
+      "script":"index.py",
+      "interpreter" : "python",
+      "interpreter_args": "-u"
+    }
+  ]
+}

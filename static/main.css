@@ -1,0 +1,42 @@
+html, body {
+  background: #181818;
+  color: #fff;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1, p { margin: 0; }
+a { color: lightblue; }
+b { color: lightgreen; }
+
+.nft {
+  width: 200px;
+  height: 200px;
+  margin: 1em auto;
+  transition: transform 0.5s ease-in-out;
+}
+
+.nft:hover {
+  transition: transform 0.5s ease-in-out;
+  transform: scale(1.1);
+}
+
+.disclaimer {
+  font-size: .5em;
+  width: 400px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: .5em 1em;
+  background: rgba(0, 0, 0, .5);
+}
+
+.yes {
+  font-size: 1.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
