@@ -16,7 +16,7 @@ with open("config.json", "r") as f:
 
 @app.route("/")
 async def index():
-    ip_for_seed = request.headers.get("X-Forwarded-For") or request.remote_addr
+    ip_for_seed = request.headers.get("CF-Connecting-IP") or request.headers.get("X-Forwarded-For") or request.remote_addr
 
     async with aiohttp.ClientSession() as session:
         async with session.get(f"https://api.alexflipnote.dev/nft?seed={ip_for_seed}") as response:
