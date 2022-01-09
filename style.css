@@ -1,0 +1,18 @@
+html, body {
+  background: #181818;
+  color: #fff;
+}
+
+h1, p { margin: 0; }
+a { color: lightblue; }
+b { color: lightgreen; }
+
+.yes {
+  font-size: 1.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
