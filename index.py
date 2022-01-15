@@ -25,9 +25,10 @@ def string_to_sha256(text: str):
 @app.route("/")
 async def index():
     ip_for_seed = request.headers.get("CF-Connecting-IP") or request.headers.get("X-Forwarded-For") or request.remote_addr
+    encrypted_ip = string_to_sha256(ip_for_seed)
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"https://api.alexflipnote.dev/nft?seed={ip_for_seed}") as response:
+        async with session.get(f"https://api.alexflipnote.dev/nft?seed={encrypted_ip}") as response:
             data = await response.json()
 
     return await render_template("index.html", nft=data)
