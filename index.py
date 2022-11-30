@@ -1,18 +1,22 @@
 import asyncio
 import json
+import sass
 import aiohttp
 import hashlib
 
-from quart import Quart, render_template, request
-
+from io import BytesIO
+from quart import Quart, render_template, request, send_file
 
 app = Quart(__name__)
 
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 
-with open("config.json", "r") as f:
-    config = json.load(f)
+
+def load_json(filename: str) -> dict:
+    with open(filename, "r", encoding="utf8") as f:
+        data = json.load(f)
+    return data
 
 
 def string_to_sha256(text: str):
@@ -20,6 +24,10 @@ def string_to_sha256(text: str):
 
     result = hashlib.sha512(f"{salt}{text}".encode()).hexdigest()
     return result
+
+
+config = load_json("./config.json")
+testimonials = load_json("./data/testimonials.json")
 
 
 @app.route("/")
@@ -31,21 +39,41 @@ async def index():
         async with session.get(f"https://api.alexflipnote.dev/nft?seed={encrypted_ip}") as response:
             data = await response.json()
 
-    return await render_template("index.html", nft=data)
+    return await render_template(
+        "index.html", nft=data,
+        testimonials=testimonials,
+        enumerate=enumerate
+    )
 
 
-@app.route("/test_error")
-async def test_error():
-    return await render_template("error_handler.html")
+@app.route("/download/<text_hex>/<text_colour>")
+async def index_download(text_hex, text_colour):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"https://api.alexflipnote.dev/nft/{text_hex}/{text_colour}") as response:
+            data = await response.read()
+
+    return await send_file(
+        BytesIO(data), mimetype="image/png",
+        attachment_filename="xela_nft.png",
+        as_attachment=True
+    )
 
 
 @app.errorhandler(Exception)
 async def handle_exception(e):
-    return await render_template("error_handler.html")
-
-
-if __name__ == "__main__":
-    app.run(
-        port=config.get("port", 8080),
-        debug=config.get("debug", False)
+    return await render_template(
+        "error_handler.html",
+        error_code=e.code,
+        error_message=e.description
     )
+
+sass.compile(
+    dirname=["./static/sass", "./static/css"],
+    output_style="compressed"
+)
+
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.run(
+    port=config.get("port", 8080),
+    debug=config.get("debug", False)
+)
