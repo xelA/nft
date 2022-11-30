@@ -95,14 +95,41 @@ b
     font-style: italic
     font-size: 1.5em
 
+.splitter
+  width: 30em
+  height: .1em
+  margin-top: 1.5em
+  background: #ccc
+
 .testimonial-container
   display: flex
   max-width: 30em
-  background: #303030
-  border-radius: .75em
   padding: .5em 1em
   flex-direction: column
+  position: relative
   margin-top: 1em
+  transition: transform 250ms ease-in-out, opacity 250ms ease-in-out, background-color 250ms ease-in-out
+
+  &::before
+    opacity: 0
+    content: ' '
+    position: absolute
+    border-style: solid
+    border-width: 0px .4em 0px .4em
+    border-color: #ccc
+    width: .45em
+    height: 1.25em
+    top: .5em
+    right: .6em
+    transition: opacity 250ms ease-in-out
+
+  &:hover
+    background-color: #282828
+    transform: scale(0.9925)
+    opacity: 0.9
+
+    &::before
+      opacity: 1
 
   .testimonial
     display: flex
@@ -141,12 +168,15 @@ b
   .disclaimer
     left: 30%
 
-
 @media (max-width: 750px)
+  .splitter
+    width: 75%
+
   .disclaimer
     margin-top: 2em
     position: relative
     width: 100%
+    padding: .5em 0
 
     p
       text-align: center

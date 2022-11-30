@@ -6,7 +6,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
     <meta name="theme-color" content="#2196F3">
-
+    <link rel="icon" type="image/x-icon" href="{{ nft.image }}"></link>
+    <meta property="og:image" content="{{ nft.image }}" />
     <meta content="xelA NFT" property="og:title" />
     <meta content="Get your very own xelA NFT, for FREE!!1" property="og:description" />
   </head>
@@ -36,6 +37,8 @@
         <i>Anyways</i>, you can get xelA <a href="https://xela.dev/invite">here</a>
       </p>
 
+      <div class="splitter"></div>
+
       <section class="testimonial-container">
         <div class="testimonial" id="test-effect">
           <img class="avatar" id="test-avatar" src="">
@@ -52,25 +55,32 @@
           const name = document.getElementById('test-name')
           const message = document.getElementById('test-message')
 
+          let test_should_move = true
+          let counter = 0
+
           function updateTestimonial() {
-            const test = test_list[Math.floor(Math.random() * test_list.length)]
-            name.innerText = test.name
-            message.innerText = test.message
-            avatar.src = `https://api.alexflipnote.dev/nft/${test.xela_colour}/${test.xela_season}`
+            if (counter >= test_list.length) counter = 0
+            let select_test = test_list[counter]
+            name.innerText = select_test.name
+            message.innerHTML = select_test.message
+            avatar.src = `https://api.alexflipnote.dev/nft/${select_test.xela_colour}/${select_test.xela_season}`
+            counter += 1
           }
 
           function fadeOutFadeIn() {
+            if (!test_should_move) return
             effect.classList.add('fade-out')
             setTimeout(() => {
               updateTestimonial()
-              setTimeout(() => {
-                effect.classList.remove('fade-out')
-              }, 250)
+              setTimeout(() => { effect.classList.remove('fade-out') }, 250)
             }, 1000)
           }
 
+          effect.addEventListener("mouseover", () => { test_should_move = false })
+          effect.addEventListener("mouseout", () => { test_should_move = true })
+
           updateTestimonial()
-          setInterval(() => { fadeOutFadeIn() }, 5000)
+          setInterval(() => { fadeOutFadeIn() }, 7500)
         </script>
       </section>
 

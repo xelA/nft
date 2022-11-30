@@ -2,6 +2,7 @@ import asyncio
 import json
 import sass
 import aiohttp
+import random
 import hashlib
 
 from io import BytesIO
@@ -39,6 +40,7 @@ async def index():
         async with session.get(f"https://api.alexflipnote.dev/nft?seed={encrypted_ip}") as response:
             data = await response.json()
 
+    random.shuffle(testimonials)
     return await render_template(
         "index.html", nft=data,
         testimonials=testimonials,
