@@ -25,14 +25,6 @@
         <img class="nft" src="{{ nft.image }}">
         <img class="cursor" src="/static/images/cursor.png">
       </a>
-      <script>
-        const nft = document.getElementById('nft-download')
-        nft.addEventListener("click", () => {
-          new Audio("/static/audio/cash_register.mp3").play(
-            { volume: 0.5 }
-          )
-        })
-      </script>
       <p class="center-text">
         <i>Anyways</i>, you can get xelA <a href="https://xela.dev/invite">here</a>
       </p>
@@ -41,7 +33,9 @@
 
       <section class="testimonial-container">
         <div class="testimonial" id="test-effect">
-          <img class="avatar" id="test-avatar" src="">
+          <a href="/steal/{{ nft.hex.replace('#', '') }}/{{ nft.season }}" download id="nft-steal">
+            <img class="avatar" id="test-avatar" src="">
+          </a>
           <div class="content">
             <p class="name" id="test-name">PLACEHOLDER</p>
             <p class="message" id="test-message">PLACEHOLDER</p>
@@ -55,6 +49,9 @@
           const name = document.getElementById('test-name')
           const message = document.getElementById('test-message')
 
+          const nft = document.getElementById('nft-download')
+          const nft_steal = document.getElementById('nft-steal')
+
           let test_should_move = true
           let counter = 0
 
@@ -62,6 +59,7 @@
             if (counter >= test_list.length) counter = 0
             let select_test = test_list[counter]
             name.innerText = select_test.name
+            nft_steal.href = `/steal/${select_test.xela_colour}/${select_test.xela_season}`
             message.innerHTML = select_test.message
             avatar.src = `https://api.alexflipnote.dev/nft/${select_test.xela_colour}/${select_test.xela_season}`
             counter += 1
@@ -76,6 +74,12 @@
             }, 1000)
           }
 
+          function play_the_funny() {
+            new Audio("/static/audio/cash_register.mp3").play({ volume: 0.5 })
+          }
+
+          nft.addEventListener("click", () => { play_the_funny() })
+          nft_steal.addEventListener("click", () => { play_the_funny() })
           effect.addEventListener("mouseover", () => { test_should_move = false })
           effect.addEventListener("mouseout", () => { test_should_move = true })
 

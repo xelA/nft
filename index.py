@@ -48,17 +48,26 @@ async def index():
     )
 
 
-@app.route("/download/<text_hex>/<text_colour>")
-async def index_download(text_hex, text_colour):
+async def fetch_and_read(filename: str, text_hex: str, text_colour: str):
     async with aiohttp.ClientSession() as session:
         async with session.get(f"https://api.alexflipnote.dev/nft/{text_hex}/{text_colour}") as response:
             data = await response.read()
 
     return await send_file(
         BytesIO(data), mimetype="image/png",
-        attachment_filename="xela_nft.png",
+        attachment_filename=filename,
         as_attachment=True
     )
+
+
+@app.route("/download/<text_hex>/<text_colour>")
+async def index_download(text_hex, text_colour):
+    return await fetch_and_read("xela_nft.png", text_hex, text_colour)
+
+
+@app.route("/steal/<text_hex>/<text_colour>")
+async def index_stolen_download(text_hex, text_colour):
+    return await fetch_and_read("stolen_xela_nft.png", text_hex, text_colour)
 
 
 @app.errorhandler(Exception)
