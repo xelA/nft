@@ -20,8 +20,8 @@ def load_json(filename: str) -> dict:
     return data
 
 
-def string_to_sha256(text: str):
-    salt = config.get("sha256_salt", "")
+def string_to_sha512(text: str):
+    salt = config.get("sha512_salt", "")
 
     result = hashlib.sha512(f"{salt}{text}".encode()).hexdigest()
     return result
@@ -33,14 +33,18 @@ testimonials = load_json("./data/testimonials.json")
 
 @app.route("/")
 async def index():
-    ip_for_seed = request.headers.get("CF-Connecting-IP") or request.headers.get("X-Forwarded-For") or request.remote_addr
-    encrypted_ip = string_to_sha256(ip_for_seed)
+    ip_for_seed = request.headers.get("CF-Connecting-IP") or \
+        request.headers.get("X-Forwarded-For") or \
+        request.remote_addr
+
+    encrypted_ip = string_to_sha512(ip_for_seed)
 
     async with aiohttp.ClientSession() as session:
         async with session.get(f"https://api.alexflipnote.dev/nft?seed={encrypted_ip}") as response:
             data = await response.json()
 
     random.shuffle(testimonials)
+
     return await render_template(
         "index.html", nft=data,
         testimonials=testimonials,
